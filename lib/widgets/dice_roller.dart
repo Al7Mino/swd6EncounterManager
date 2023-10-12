@@ -55,6 +55,8 @@ class _DiceRollerState extends State<DiceRoller> {
           SizedBox(
             width: 200,
             child: NumericalInput(
+              min: 1,
+              value: 1,
               formatText: (text) => '$text D',
             ),
           ),
