@@ -1,4 +1,4 @@
-# swd6_encouter
+# swd6_encounter_manager
 
 A new Flutter project.
 

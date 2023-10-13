@@ -1,6 +1,6 @@
 {
-    "name": "swd6_encouter",
-    "short_name": "swd6_encouter",
+    "name": "swd6_encounter_manager",
+    "short_name": "swd6_encounter_manager",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

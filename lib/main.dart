@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:swd6_encouter/widgets/dice_roller.dart';
+import 'package:swd6_encounter_manager/widgets/dice_roller.dart';
 
 void main() {
   runApp(const MyApp());

@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
 import 'package:gap/gap.dart';
-import 'package:swd6_encouter/base/numerical_input.dart';
+import 'package:swd6_encounter_manager/base/numerical_input.dart';
 
 class DiceRoller extends StatefulWidget {
   const DiceRoller({super.key});
