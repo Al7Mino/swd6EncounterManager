@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:swd6_encounter_manager/models/roll.dart';
 import 'package:swd6_encounter_manager/widgets/dice_roller.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => RollModel(),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -27,6 +32,11 @@ class MyHomePage extends StatelessWidget {
 
   final String title;
 
+  void roll(BuildContext context) {
+    Provider.of<RollModel>(context, listen: false).roll();
+    _dialogBuilder(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,10 +48,51 @@ class MyHomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            DiceRoller(),
+            Text('Test app'),
           ],
         ),
       ),
+      bottomNavigationBar: const BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        child: DiceRoller(),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => {roll(context)},
+        child: const Text('Roll'),
+      ),
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterDocked,
     );
   }
+}
+
+Future<void> _dialogBuilder(BuildContext context) {
+  return showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return SimpleDialog(
+        children: <Widget>[
+          Consumer<RollModel>(
+            builder: (context, roll, child) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(roll.total.toString()),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(roll.wildDiceResults.join(', ')),
+                      const Text(', '),
+                      Text(roll.dicesResults.join(', ')),
+                    ],
+                  ),
+                ],
+              );
+            },
+          )
+        ],
+      );
+    },
+  );
 }

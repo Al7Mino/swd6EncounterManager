@@ -9,7 +9,9 @@ class NumericalInput extends StatefulWidget {
     this.step = 1.0,
     this.value = 0.0,
     this.decimals = 0,
+    this.decoration,
     this.formatText,
+    this.onChanged,
   });
 
   /// The minimum value the user can enter.
@@ -41,37 +43,18 @@ class NumericalInput extends StatefulWidget {
   /// Defaults to `0`.
   final int decimals;
 
+  /// The decoration to show around the text field.
+  ///
+  /// It can be configured to show an icon, label, hint text, and error text.
+  ///
+  /// See [TextField.decoration]
+  final InputDecoration? decoration;
+
   /// Callback function to format the text displayed in [TextField]
   final String Function(String text)? formatText;
 
-  /* bool autofocus = false
-  bool? enabled
-  bool readOnly = false
-  TextInputType? keyboardType
-  TextInputAction? textInputAction
-  InputDecoration? decoration
-  String? Function(String?)? validator
-  Brightness? keyboardAppearance
-  Icon? incrementIcon
-  Icon? decrementIcon
-  double? iconSize
-  MaterialStateProperty<Color?>? iconColor
-  bool showButtons = true
-  Axis direction = Axis.horizontal
-  FocusNode? focusNode
-  TextDirection textDirection = TextDirection.ltr
-  TextStyle? textStyle
-  Widget Function(BuildContext, EditableTextState)? contextMenuBuilder
-  bool? showCursor
-  Color? cursorColor
-  bool enableInteractiveSelection = true
-  double spacing = 8
-  void Function(double)? onChanged
-  void Function(double)? onSubmitted
-  bool Function(double)? canChange
-  void Function()? beforeChange
-  void Function()? afterChange
-  TextAlign textAlign = TextAlign.center */
+  /// Called when the user initiates a change to the TextField's value: when they have inserted or deleted text, or press the increase or decrease buttons.
+  final void Function(double value)? onChanged;
 
   @override
   State<NumericalInput> createState() => _NumericalInputState();
@@ -124,6 +107,7 @@ class _NumericalInputState extends State<NumericalInput> {
       _value += widget.step;
     });
     _controller.text = _format();
+    widget.onChanged?.call(_value);
   }
 
   void _onClickMinus() {
@@ -134,19 +118,22 @@ class _NumericalInputState extends State<NumericalInput> {
       _value -= widget.step;
     });
     _controller.text = _format();
+    widget.onChanged?.call(_value);
   }
 
   void _onChangedValue(String val) {
     if (val.isEmpty) {
       setState(() {
-        _value = 0;
+        _value = widget.min;
       });
+      widget.onChanged?.call(_value);
       return;
     }
     var doubleVal = double.parse(val);
     setState(() {
       _value = doubleVal;
     });
+    widget.onChanged?.call(_value);
   }
 
   @override
@@ -164,6 +151,9 @@ class _NumericalInputState extends State<NumericalInput> {
   @override
   void dispose() {
     _controller.dispose();
+    _focusNode.removeListener(() {
+      _listenFocus();
+    });
     super.dispose();
   }
 
@@ -183,6 +173,7 @@ class _NumericalInputState extends State<NumericalInput> {
           child: TextField(
             controller: _controller,
             focusNode: _focusNode,
+            decoration: widget.decoration,
             keyboardType: TextInputType.number,
             inputFormatters: <TextInputFormatter>[
               FilteringTextInputFormatter.digitsOnly,
