@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 
 class RollModel extends ChangeNotifier {
   /// Number of dices to roll.
-  late int numberDice;
+  int numberDice = 1;
 
   /// Bonus applied to the result.
   int bonus = 0;
@@ -48,18 +48,18 @@ class RollModel extends ChangeNotifier {
     _wildDiceResults.clear();
     _dicesResults.clear();
 
-    var firstDice = Random().nextInt(5) + 1;
+    var firstDice = Random().nextInt(6) + 1;
     _wildDiceResults.add(firstDice);
     if (firstDice == 1) {
-      _wildDiceResults.add(Random().nextInt(5) + 1);
+      _wildDiceResults.add(Random().nextInt(6) + 1);
     }
     while (firstDice == 6) {
-      firstDice = Random().nextInt(5) + 1;
+      firstDice = Random().nextInt(6) + 1;
       _wildDiceResults.add(firstDice);
     }
 
     for (var i = 1; i < numberDice; i++) {
-      _dicesResults.add(Random().nextInt(5) + 1);
+      _dicesResults.add(Random().nextInt(6) + 1);
     }
 
     notifyListeners();

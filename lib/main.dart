@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swd6_encounter_manager/models/roll.dart';
+import 'package:swd6_encounter_manager/widgets/dialog_score.dart';
 import 'package:swd6_encounter_manager/widgets/dice_roller.dart';
 
 void main() {
@@ -34,7 +35,7 @@ class MyHomePage extends StatelessWidget {
 
   void roll(BuildContext context) {
     Provider.of<RollModel>(context, listen: false).roll();
-    _dialogBuilder(context);
+    ScoreDialog.builder(context);
   }
 
   @override
@@ -64,35 +65,4 @@ class MyHomePage extends StatelessWidget {
           FloatingActionButtonLocation.miniCenterDocked,
     );
   }
-}
-
-Future<void> _dialogBuilder(BuildContext context) {
-  return showDialog<void>(
-    context: context,
-    builder: (BuildContext context) {
-      return SimpleDialog(
-        children: <Widget>[
-          Consumer<RollModel>(
-            builder: (context, roll, child) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(roll.total.toString()),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(roll.wildDiceResults.join(', ')),
-                      const Text(', '),
-                      Text(roll.dicesResults.join(', ')),
-                    ],
-                  ),
-                ],
-              );
-            },
-          )
-        ],
-      );
-    },
-  );
 }
