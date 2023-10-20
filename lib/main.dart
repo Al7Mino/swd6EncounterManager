@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:swd6_encounter_manager/custom_icons_icons.dart';
 import 'package:swd6_encounter_manager/models/roll.dart';
 import 'package:swd6_encounter_manager/widgets/dialog_score.dart';
 import 'package:swd6_encounter_manager/widgets/dice_roller.dart';
@@ -54,12 +55,16 @@ class MyHomePage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: const BottomAppBar(
-        shape: CircularNotchedRectangle(),
         child: DiceRoller(),
       ),
       floatingActionButton: FloatingActionButton(
+        mini: true,
+        tooltip: 'Roll',
         onPressed: () => {roll(context)},
-        child: const Text('Roll'),
+        child: const Icon(
+          CustomIcons.dice_d6,
+          size: 18,
+        ),
       ),
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniCenterDocked,

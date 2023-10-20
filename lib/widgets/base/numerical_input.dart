@@ -9,7 +9,9 @@ class NumericalInput extends StatefulWidget {
     this.step = 1.0,
     this.value = 0.0,
     this.decimals = 0,
-    this.decoration,
+    this.decoration = const InputDecoration(
+      isDense: true,
+    ),
     this.formatText,
     this.onChanged,
   });
@@ -161,33 +163,82 @@ class _NumericalInputState extends State<NumericalInput> {
   Widget build(BuildContext context) {
     return Flex(
       direction: Axis.horizontal,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        IconButton(
-          onPressed: _onClickMinus,
-          icon: const Icon(Icons.remove),
-          iconSize: 16,
-          padding: const EdgeInsets.all(4.0),
-          constraints: const BoxConstraints(),
-        ),
-        Expanded(
-          child: TextField(
-            controller: _controller,
-            focusNode: _focusNode,
-            decoration: widget.decoration,
-            keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.digitsOnly,
-              TextInputFormatter.withFunction(_filterMinMax)
-            ],
-            onChanged: _onChangedValue,
+        Container(
+          width: 24,
+          height: 24,
+          margin: const EdgeInsets.only(right: 8),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: _value == widget.min
+                  ? Theme.of(context).disabledColor
+                  : const Color(0xFF000000),
+            ),
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+          ),
+          child: ElevatedButton(
+            onPressed: _value == widget.min ? null : _onClickMinus,
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.all(2),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: Icon(
+              Icons.remove,
+              size: 16,
+              color: _value == widget.min
+                  ? Theme.of(context).disabledColor
+                  : Theme.of(context).textTheme.bodyMedium!.color,
+            ),
           ),
         ),
-        IconButton(
-          onPressed: _onClickPlus,
-          icon: const Icon(Icons.add),
-          iconSize: 16,
-          padding: const EdgeInsets.all(4.0),
-          constraints: const BoxConstraints(),
+        Expanded(
+          child: SizedBox(
+            height: 28,
+            child: TextField(
+              controller: _controller,
+              focusNode: _focusNode,
+              decoration: widget.decoration,
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly,
+                TextInputFormatter.withFunction(_filterMinMax)
+              ],
+              onChanged: _onChangedValue,
+            ),
+          ),
+        ),
+        Container(
+          width: 24,
+          height: 24,
+          margin: const EdgeInsets.only(left: 8),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: _value == widget.max
+                  ? Theme.of(context).disabledColor
+                  : const Color(0xFF000000),
+            ),
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+          ),
+          child: ElevatedButton(
+            onPressed: _value == widget.max ? null : _onClickPlus,
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.all(2),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: Icon(
+              Icons.add,
+              size: 16,
+              color: _value == widget.max
+                  ? Theme.of(context).disabledColor
+                  : Theme.of(context).textTheme.bodyMedium!.color,
+            ),
+          ),
         ),
       ],
     );
