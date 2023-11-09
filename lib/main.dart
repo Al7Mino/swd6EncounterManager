@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:swd6_encounter_manager/custom_icons_icons.dart';
+import 'package:swd6_encounter_manager/custom_icons.dart';
 import 'package:swd6_encounter_manager/models/roll.dart';
+import 'package:swd6_encounter_manager/pages/home.dart';
 import 'package:swd6_encounter_manager/widgets/dialog_score.dart';
 import 'package:swd6_encounter_manager/widgets/dice_roller.dart';
 
@@ -29,10 +30,23 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
   final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  int screenIndex = 0;
+
+  void handleScreenChanged(int selectedScreen) {
+    setState(() {
+      screenIndex = selectedScreen;
+    });
+  }
 
   void roll(BuildContext context) {
     Provider.of<RollModel>(context, listen: false).roll();
@@ -41,19 +55,38 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget page;
+    switch (screenIndex) {
+      case 0:
+        page = const HomePage();
+        break;
+      case 1:
+        page = const Placeholder();
+        break;
+      default:
+        throw UnimplementedError('No widget for $screenIndex');
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(title),
+        title: Text(widget.title),
       ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text('Test app'),
-          ],
-        ),
+      drawer: NavigationDrawer(
+        onDestinationSelected: handleScreenChanged,
+        selectedIndex: screenIndex,
+        children: const [
+          NavigationDrawerDestination(
+            icon: Icon(CustomIcons.crossed_swords),
+            label: Text('Encounters'),
+          ),
+          NavigationDrawerDestination(
+            icon: Icon(CustomIcons.dice),
+            label: Text('Dice'),
+          ),
+        ],
       ),
+      body: page,
       bottomNavigationBar: const BottomAppBar(
         child: DiceRoller(),
       ),
