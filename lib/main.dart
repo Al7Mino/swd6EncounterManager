@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swd6_encounter_manager/custom_icons.dart';
 import 'package:swd6_encounter_manager/models/roll.dart';
-import 'package:swd6_encounter_manager/pages/home.dart';
+import 'package:swd6_encounter_manager/pages/encounter.dart';
 import 'package:swd6_encounter_manager/widgets/dialog_score.dart';
 import 'package:swd6_encounter_manager/widgets/dice_roller.dart';
 
@@ -25,15 +25,13 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -49,16 +47,18 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void roll(BuildContext context) {
-    Provider.of<RollModel>(context, listen: false).roll();
-    ScoreDialog.builder(context);
+    var result = Provider.of<RollModel>(context, listen: false).roll();
+    ScoreDialog.builder(context, result);
   }
 
   @override
   Widget build(BuildContext context) {
     Widget page;
+    String title = '';
     switch (screenIndex) {
       case 0:
-        page = const HomePage();
+        page = const EncounterPage();
+        title = 'Encounter';
         break;
       case 1:
         page = const Placeholder();
@@ -70,17 +70,24 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: Text(title),
       ),
       drawer: NavigationDrawer(
         onDestinationSelected: handleScreenChanged,
         selectedIndex: screenIndex,
-        children: const [
-          NavigationDrawerDestination(
-            icon: Icon(CustomIcons.crossed_swords),
-            label: Text('Encounters'),
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(28, 16, 16, 10),
+            child: Text(
+              'SWD6 Encounter Manager',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
           ),
-          NavigationDrawerDestination(
+          const NavigationDrawerDestination(
+            icon: Icon(CustomIcons.crossed_swords),
+            label: Text('Encounter'),
+          ),
+          const NavigationDrawerDestination(
             icon: Icon(CustomIcons.dice),
             label: Text('Dice'),
           ),
